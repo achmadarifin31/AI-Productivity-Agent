@@ -8,6 +8,12 @@ from __future__ import annotations
 
 import sys
 
+# Pastikan output UTF-8 (hindari crash emoji/karakter non-ASCII di konsol Windows).
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except Exception:
+    pass
+
 import config
 from tools.summarize import summarize_unread_emails
 
