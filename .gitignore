@@ -4,6 +4,7 @@
 # Secrets & credentials (JANGAN di-commit)
 .env
 token.json
+credentials/
 credentials.json
 
 # Python
