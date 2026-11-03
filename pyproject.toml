@@ -1,0 +1,18 @@
+[project]
+name = "ai-productivity-agent"
+version = "0.1.0"
+description = "AI agent lokal yang membaca & meringkas Gmail (fokus notifikasi kerja), arsitektur extensible."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "openai>=1.54.0",
+    "python-dotenv>=1.0.1",
+    "google-api-python-client>=2.149.0",
+    "google-auth-oauthlib>=1.2.1",
+    "google-auth>=2.35.0",
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+]
+
+[tool.uv]
+# .venv yang sudah ada akan dipakai otomatis oleh uv.

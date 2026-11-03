@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Productivity Agent</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="header">
+        <h1>🤖 AI Productivity Agent</h1>
+        <p class="subtitle">Asisten Gmail — ringkas, cari, kelompokkan email</p>
+      </header>
+
+      <main id="chat" class="chat" aria-live="polite"></main>
+
+      <form id="chat-form" class="composer" autocomplete="off">
+        <input
+          id="message"
+          type="text"
+          placeholder="Tulis perintah, mis. 'ringkas email kerja hari ini'…"
+          aria-label="Pesan"
+          required
+        />
+        <button id="send" type="submit">Kirim</button>
+      </form>
+    </div>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

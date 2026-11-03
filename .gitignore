@@ -1,0 +1,26 @@
+# Virtual environment
+.venv/
+
+# Secrets & credentials (JANGAN di-commit)
+.env
+token.json
+credentials.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# uv
+# (uv.lock IS committed; it pins dependencies)
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Docs folder kept out of repo per original setup
+docs/
