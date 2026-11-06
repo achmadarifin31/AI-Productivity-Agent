@@ -4,7 +4,9 @@ Inti "AI agent": model memutuskan sendiri kapan memanggil tool lewat
 function calling. Backend hanya orchestrator — mengeksekusi tool & menyuapkan
 hasilnya kembali ke model sampai model memberi jawaban final.
 
-Stateless: `messages` dibangun ulang tiap permintaan (tanpa history lintas-request).
+Memori: turn teks percakapan disimpan per `session_id` (lihat history.py) dan
+disuntikkan kembali sebelum pesan baru, sehingga agent mengingat konteks
+sebelumnya. Plumbing tool tetap hanya hidup di dalam satu request.
 """
 
 from __future__ import annotations
@@ -12,6 +14,7 @@ from __future__ import annotations
 import json
 
 import config
+import history
 from llm import get_client
 from tools import TOOL_FUNCTIONS, TOOLS
 
@@ -44,13 +47,23 @@ def _run_tool(name: str, arguments: str) -> str:
     return result if isinstance(result, str) else json.dumps(result, ensure_ascii=False)
 
 
-def run_agent(user_message: str) -> str:
-    """Jalankan agent loop untuk satu pesan pengguna, kembalikan teks final."""
+def run_agent(user_message: str, session_id: str = "default") -> str:
+    """Jalankan agent loop untuk satu pesan pengguna, kembalikan teks final.
+
+    `session_id` memisahkan memori antar percakapan. History turn sebelumnya
+    disuntikkan sebelum pesan baru; tukar-pesan final disimpan setelah selesai.
+    """
     client = get_client()
-    messages: list[dict] = [
-        {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": user_message},
-    ]
+
+    # Bangun konteks: system + history tersimpan + pesan baru.
+    messages: list[dict] = [{"role": "system", "content": SYSTEM_PROMPT}]
+    messages.extend(history.get_history(session_id))
+    messages.append({"role": "user", "content": user_message})
+
+    reply = (
+        "Maaf, permintaan terlalu rumit dan melebihi batas langkah agent. "
+        "Coba persempit permintaan Anda."
+    )
 
     for _ in range(config.MAX_AGENT_ITERATIONS):
         response = client.chat.completions.create(
@@ -63,7 +76,8 @@ def run_agent(user_message: str) -> str:
 
         # Tidak ada permintaan tool -> ini jawaban final.
         if not msg.tool_calls:
-            return msg.content or "(tidak ada jawaban)"
+            reply = msg.content or "(tidak ada jawaban)"
+            break
 
         # Tambahkan pesan assistant (berisi permintaan tool) ke riwayat.
         messages.append(
@@ -96,7 +110,6 @@ def run_agent(user_message: str) -> str:
             )
         # Lanjut loop: beri model kesempatan menalar hasil tool.
 
-    return (
-        "Maaf, permintaan terlalu rumit dan melebihi batas langkah agent. "
-        "Coba persempit permintaan Anda."
-    )
+    # Simpan tukar-pesan final (baik jawaban normal maupun fallback batas iterasi).
+    history.add_exchange(session_id, user_message, reply)
+    return reply

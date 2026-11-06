@@ -31,6 +31,12 @@ BODY_TRUNCATE_CHARS: int = int(os.getenv("BODY_TRUNCATE_CHARS", "1500"))
 # Pengaman agar loop tidak memanggil tool tanpa henti.
 MAX_AGENT_ITERATIONS: int = int(os.getenv("MAX_AGENT_ITERATIONS", "5"))
 
+# --- Conversation history ---
+# File JSON tempat menyimpan memori percakapan (per session_id).
+HISTORY_FILE: str = os.getenv("HISTORY_FILE", "history.json")
+# Jumlah pesan terakhir yang disimpan/di-feed per sesi (hemat token).
+MAX_HISTORY_MESSAGES: int = int(os.getenv("MAX_HISTORY_MESSAGES", "20"))
+
 
 def require_openai_key() -> str:
     """Kembalikan API key, atau beri pesan error yang jelas bila belum diset."""

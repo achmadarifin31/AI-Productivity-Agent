@@ -7,6 +7,9 @@ token.json
 credentials/
 credentials.json
 
+# Memori percakapan (isi pribadi)
+history.json
+
 # Python
 __pycache__/
 *.py[cod]

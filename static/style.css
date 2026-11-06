@@ -33,11 +33,31 @@ body {
 .header {
   padding: 16px 20px;
   border-bottom: 1px solid var(--panel-2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .header h1 {
   margin: 0;
   font-size: 1.25rem;
+}
+
+#reset {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  border: 1px solid var(--panel-2);
+  border-radius: 8px;
+  background: var(--panel-2);
+  color: var(--text);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+#reset:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .subtitle {
